@@ -15,9 +15,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fundraising Campaign",
+  title: "Forest Revival - Tree Planting Initiative",
   description:
-    "A crypto fundraising campaign accepting donations in STX & sBTC.",
+    "Help restore deforested areas by funding tree planting initiatives. Each donation plants real trees while you play our interactive tree planting game. Watch forests grow, wildlife return, and carbon offset calculations in real-time.",
+  keywords: [
+    "tree planting",
+    "forest restoration",
+    "environmental conservation",
+    "carbon offset",
+    "climate change",
+    "wildlife conservation",
+    "blockchain fundraising",
+    "STX donations",
+    "sBTC donations",
+    "interactive game",
+    "environmental impact",
+    "sustainability",
+    "reforestation",
+    "biodiversity",
+    "ecosystem restoration"
+  ],
+  authors: [{ name: "Forest Revival Initiative" }],
+  openGraph: {
+    title: "Forest Revival - Tree Planting Initiative",
+    description: "Help restore deforested areas by funding tree planting initiatives. Each donation plants real trees while you play our interactive tree planting game.",
+    type: "website",
+    images: [
+      {
+        url: "/forest-revival-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Forest Revival Initiative - Tree Planting Campaign",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Forest Revival - Tree Planting Initiative",
+    description: "Help restore deforested areas by funding tree planting initiatives. Each donation plants real trees while you play our interactive tree planting game.",
+    images: ["/forest-revival-og.jpg"],
+  },
 };
 
 export default function RootLayout({

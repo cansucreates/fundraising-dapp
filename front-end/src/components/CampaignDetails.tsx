@@ -22,7 +22,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { CAMPAIGN_SUBTITLE, CAMPAIGN_TITLE } from "@/constants/campaign";
 import StyledMarkdown from "./StyledMarkdown";
 import { useCampaignInfo, useExistingDonation } from "@/hooks/campaignQueries";
@@ -72,22 +72,22 @@ export default function CampaignDetails({
   const campaignIsCancelled =
     !campaignIsUninitialized && campaignInfo?.isCancelled;
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
-  };
+  }, [images.length]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
-  };
+  }, [images.length]);
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [nextSlide]);
 
   const progress = campaignInfo
     ? (campaignInfo.usdValue / campaignInfo.goal) * 100

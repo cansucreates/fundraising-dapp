@@ -21,6 +21,8 @@ import {
   RadioGroup,
   Radio,
   ModalFooter,
+  Badge,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useContext } from "react";
@@ -90,6 +92,20 @@ export default function DonationModal({
     setSelectedAmount(null);
   };
 
+  const calculateEnvironmentalImpact = (amount: number) => {
+    const treesPlanted = Math.floor(amount * 10); // $1 = 10 trees
+    const carbonOffset = treesPlanted * 22; // 22kg CO2 per tree per year
+    const forestArea = treesPlanted * 25; // 25 sq meters per tree
+    const oxygenProduced = treesPlanted * 118; // kg of oxygen per year
+    
+    return {
+      treesPlanted,
+      carbonOffset,
+      forestArea,
+      oxygenProduced,
+    };
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -123,16 +139,36 @@ export default function DonationModal({
               ),
             });
 
+      const impact = calculateEnvironmentalImpact(amount);
+
       const doSuccessToast = (txid: string) => {
         toast({
-          title: "Thank you!",
+          title: "🌳 Thank you for planting trees!",
           description: (
-            <Flex direction="column" gap="4">
-              <Box>Processing donation of ${amount}.</Box>
-              <Box fontSize="xs">
+            <VStack spacing={3} align="stretch">
+              <Box>
+                <Text fontWeight="bold" color="green.600">
+                  Your donation of ${amount} will plant {impact.treesPlanted} trees!
+                </Text>
+              </Box>
+              <SimpleGrid columns={2} spacing={2}>
+                <Box textAlign="center">
+                  <Text fontSize="sm" color="blue.600" fontWeight="bold">
+                    {impact.carbonOffset.toLocaleString()} kg CO₂
+                  </Text>
+                  <Text fontSize="xs">Carbon offset per year</Text>
+                </Box>
+                <Box textAlign="center">
+                  <Text fontSize="sm" color="green.600" fontWeight="bold">
+                    {impact.forestArea.toLocaleString()} m²
+                  </Text>
+                  <Text fontSize="xs">Forest area restored</Text>
+                </Box>
+              </SimpleGrid>
+              <Box fontSize="xs" color="gray.600">
                 Transaction ID: <strong>{txid}</strong>
               </Box>
-            </Flex>
+            </VStack>
           ),
           status: "success",
           isClosable: true,
@@ -153,7 +189,7 @@ export default function DonationModal({
           onCancel: () => {
             toast({
               title: "Cancelled",
-              description: "Transaction was cancelled",
+              description: "Tree planting was cancelled",
               status: "info",
               duration: 3000,
             });
@@ -166,7 +202,7 @@ export default function DonationModal({
       console.error(e);
       toast({
         title: "Error",
-        description: "Failed to make contribution",
+        description: "Failed to plant trees",
         status: "error",
       });
     } finally {
@@ -179,7 +215,12 @@ export default function DonationModal({
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Make a Contribution</ModalHeader>
+        <ModalHeader>
+          <HStack spacing={3}>
+            <Text fontSize="2xl">🌳</Text>
+            <Text>Plant Trees & Restore Forests</Text>
+          </HStack>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb="8">
           <Flex direction="column" gap="3">
@@ -193,7 +234,14 @@ export default function DonationModal({
                 direction="column"
                 gap="4"
               >
-                <Box>Please connect a STX wallet to make a contribution.</Box>
+                <Box textAlign="center">
+                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                    🌱 Connect Your Wallet to Plant Trees
+                  </Text>
+                  <Text color="gray.600">
+                    Connect your STX wallet to contribute to forest restoration and play our interactive tree planting game.
+                  </Text>
+                </Box>
                 {isDevnetEnvironment() ? (
                   <DevnetWalletButton
                     currentWallet={devnetWallet}
@@ -205,118 +253,190 @@ export default function DonationModal({
                 )}
               </Flex>
             ) : (
-              <>
-                {hasMadePreviousDonation ? (
-                  <Alert mb="4">
+              <VStack spacing={6}>
+                {/* Environmental Impact Preview */}
+                <Box
+                  bg="green.50"
+                  p={4}
+                  borderRadius="lg"
+                  borderWidth="1px"
+                  borderColor="green.200"
+                  w="full"
+                >
+                  <Text fontWeight="bold" color="green.700" mb={2}>
+                    🌍 Your Impact Preview
+                  </Text>
+                  <Text fontSize="sm" color="green.600">
+                    Every $1 donated plants 10 trees and offsets 220kg of CO₂ annually.
+                    Your contribution directly supports forest restoration projects worldwide.
+                  </Text>
+                </Box>
+
+                {/* Payment Method Selection */}
+                <Box w="full">
+                  <Text fontWeight="bold" mb={3}>
+                    Choose Payment Method
+                  </Text>
+                  <RadioGroup value={paymentMethod} onChange={setPaymentMethod}>
+                    <VStack spacing={3} align="stretch">
+                      <Radio value="stx" colorScheme="green">
+                        <HStack spacing={2}>
+                          <Text>🌳 STX (Stacks)</Text>
+                          <Badge colorScheme="green" variant="subtle">
+                            Recommended
+                          </Badge>
+                        </HStack>
+                      </Radio>
+                      <Radio value="sbtc" colorScheme="green">
+                        <Text>₿ sBTC (Bitcoin)</Text>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
+                </Box>
+
+                {/* Amount Selection */}
+                <Box w="full">
+                  <Text fontWeight="bold" mb={3}>
+                    Select Donation Amount
+                  </Text>
+                  <VStack spacing={3}>
+                    <SimpleGrid columns={2} spacing={3} w="full">
+                      {presetAmounts.map((amount) => (
+                        <Button
+                          key={amount}
+                          variant={selectedAmount === amount ? "solid" : "outline"}
+                          colorScheme="green"
+                          onClick={() => handlePresetClick(amount)}
+                          h="auto"
+                          p={4}
+                        >
+                          <VStack spacing={1}>
+                            <Text fontWeight="bold">${amount}</Text>
+                            <Text fontSize="xs" opacity={0.8}>
+                              {amount * 10} trees
+                            </Text>
+                          </VStack>
+                        </Button>
+                      ))}
+                    </SimpleGrid>
+                    <Box w="full">
+                      <Text fontSize="sm" mb={2}>
+                        Or enter custom amount:
+                      </Text>
+                      <NumberInput
+                        value={customAmount}
+                        onChange={handleCustomAmountChange}
+                        min={1}
+                        max={10000}
+                      >
+                        <NumberInputField
+                          placeholder="Enter amount in USD"
+                          borderRadius="lg"
+                        />
+                      </NumberInput>
+                      {customAmount && (
+                        <Text fontSize="xs" color="green.600" mt={1}>
+                          Will plant {Math.floor(Number(customAmount) * 10)} trees
+                        </Text>
+                      )}
+                    </Box>
+                  </VStack>
+                </Box>
+
+                {/* Impact Summary */}
+                {(selectedAmount || customAmount) && (
+                  <Box
+                    bg="blue.50"
+                    p={4}
+                    borderRadius="lg"
+                    borderWidth="1px"
+                    borderColor="blue.200"
+                    w="full"
+                  >
+                    <Text fontWeight="bold" color="blue.700" mb={3}>
+                      🌿 Your Contribution Impact
+                    </Text>
+                    {(() => {
+                      const amount = selectedAmount || Number(customAmount);
+                      const impact = calculateEnvironmentalImpact(amount);
+                      return (
+                        <SimpleGrid columns={2} spacing={4}>
+                          <Box textAlign="center">
+                            <Text fontSize="lg" fontWeight="bold" color="green.600">
+                              {impact.treesPlanted}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Trees Planted
+                            </Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="lg" fontWeight="bold" color="blue.600">
+                              {impact.carbonOffset.toLocaleString()} kg
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              CO₂ Offset/Year
+                            </Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="lg" fontWeight="bold" color="green.600">
+                              {impact.forestArea.toLocaleString()} m²
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Forest Area
+                            </Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="lg" fontWeight="bold" color="cyan.600">
+                              {impact.oxygenProduced.toLocaleString()} kg
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Oxygen/Year
+                            </Text>
+                          </Box>
+                        </SimpleGrid>
+                      );
+                    })()}
+                  </Box>
+                )}
+
+                {/* Previous Donation Info */}
+                {hasMadePreviousDonation && (
+                  <Alert status="info">
                     <Box>
-                      <AlertTitle>
-                        Heads up: you&apos;ve contributed before. Thank you!
-                      </AlertTitle>
+                      <AlertTitle>🌳 You&apos;ve already contributed to forest restoration!</AlertTitle>
                       <AlertDescription>
                         <Box>
-                          STX:{" "}
+                          Previous STX:{" "}
                           {Number(
                             ustxToStx(previousDonation?.stxAmount)
                           ).toFixed(2)}
                         </Box>
                         <Box>
-                          sBTC:{" "}
+                          Previous sBTC:{" "}
                           {satsToSbtc(previousDonation?.sbtcAmount).toFixed(8)}
                         </Box>
                       </AlertDescription>
                     </Box>
                   </Alert>
-                ) : null}
-                <Box mx="auto" p={6} borderWidth="1px" borderRadius="lg">
-                  <VStack spacing={6} align="stretch">
-                    <Text fontSize="lg" fontWeight="bold">
-                      Choose Payment Method
-                    </Text>
-
-                    <RadioGroup
-                      value={paymentMethod}
-                      onChange={setPaymentMethod}
-                    >
-                      <div>
-                        <Radio value="stx" id="stx">
-                          STX
-                        </Radio>
-                      </div>
-                      <div>
-                        <Radio value="sbtc" id="sbtc">
-                          sBTC
-                        </Radio>
-                      </div>
-                    </RadioGroup>
-
-                    <Text fontSize="lg" fontWeight="bold">
-                      Choose Contribution Amount
-                    </Text>
-
-                    <HStack spacing={4} justify="center" wrap="wrap">
-                      {presetAmounts.map((amount) => (
-                        <Button
-                          key={amount}
-                          size="lg"
-                          variant={
-                            selectedAmount === amount ? "solid" : "outline"
-                          }
-                          colorScheme="blue"
-                          onClick={() => handlePresetClick(amount)}
-                        >
-                          ${amount}
-                        </Button>
-                      ))}
-                    </HStack>
-
-                    <Text fontSize="md">Or enter custom amount:</Text>
-
-                    <NumberInput
-                      min={1}
-                      value={customAmount}
-                      onChange={handleCustomAmountChange}
-                    >
-                      <NumberInputField
-                        placeholder="Enter amount"
-                        textAlign="center"
-                        fontSize="lg"
-                      />
-                    </NumberInput>
-
-                    <Flex direction="column" gap="1">
-                      <Button
-                        colorScheme="green"
-                        size="lg"
-                        onClick={handleSubmit}
-                        isDisabled={
-                          (!selectedAmount && !customAmount) || isLoading
-                        }
-                        isLoading={isLoading}
-                      >
-                        Donate ${selectedAmount || customAmount || "0"}
-                      </Button>
-                      <Box mx="auto" fontSize="sm" fontWeight="bold">
-                        (≈
-                        {paymentMethod === "stx"
-                          ? `${usdToStx(
-                              Number(selectedAmount || customAmount || "0"),
-                              prices?.stx || 0
-                            ).toFixed(2)} STX`
-                          : `${usdToSbtc(
-                              Number(selectedAmount || customAmount || "0"),
-                              prices?.sbtc || 0
-                            ).toFixed(8)} sBTC`}
-                        )
-                      </Box>
-                    </Flex>
+                )}
                   </VStack>
-                </Box>
-              </>
             )}
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onClose}>Close</Button>
+          {currentWalletAddress && (
+            <Button
+              colorScheme="green"
+              size="lg"
+              onClick={handleSubmit}
+              isLoading={isLoading}
+              loadingText="Planting Trees..."
+              leftIcon={<Text fontSize="xl">🌳</Text>}
+              w="full"
+            >
+              Plant Trees Now
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

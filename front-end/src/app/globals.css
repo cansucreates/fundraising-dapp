@@ -1,12 +1,22 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f9fa;
+  --foreground: #2D5A27;
+  --primary-green: #2D5A27;
+  --secondary-brown: #8B4513;
+  --accent-blue: #87CEEB;
+  --forest-light: #4A7C59;
+  --earth-dark: #654321;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1a1a;
+    --foreground: #e8f5e8;
+    --primary-green: #4A7C59;
+    --secondary-brown: #A0522D;
+    --accent-blue: #98D8E8;
+    --forest-light: #6B8E6B;
+    --earth-dark: #8B7355;
   }
 }
 
@@ -18,10 +28,11 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, var(--background) 0%, #e8f5e8 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
 * {
@@ -31,12 +42,147 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--primary-green);
   text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--forest-light);
+}
+
+/* Forest theme scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forest-light);
+}
+
+/* Forest theme focus styles */
+:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* Forest theme selection */
+::selection {
+  background: var(--accent-blue);
+  color: var(--foreground);
+}
+
+/* Forest theme animations */
+@keyframes forest-grow {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes leaf-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+@keyframes tree-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(1deg);
+  }
+  75% {
+    transform: rotate(-1deg);
+  }
+}
+
+/* Forest theme utility classes */
+.forest-gradient {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-brown) 100%);
+}
+
+.earth-gradient {
+  background: linear-gradient(135deg, var(--secondary-brown) 0%, var(--earth-dark) 100%);
+}
+
+.sky-gradient {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, #98D8E8 100%);
+}
+
+.forest-text {
+  color: var(--primary-green);
+}
+
+.earth-text {
+  color: var(--secondary-brown);
+}
+
+.sky-text {
+  color: var(--accent-blue);
+}
+
+.forest-bg {
+  background-color: var(--primary-green);
+}
+
+.earth-bg {
+  background-color: var(--secondary-brown);
+}
+
+.sky-bg {
+  background-color: var(--accent-blue);
+}
+
+/* Forest theme shadows */
+.forest-shadow {
+  box-shadow: 0 4px 6px rgba(45, 90, 39, 0.1);
+}
+
+.forest-shadow-lg {
+  box-shadow: 0 10px 25px rgba(45, 90, 39, 0.15);
+}
+
+/* Forest theme borders */
+.forest-border {
+  border: 2px solid var(--primary-green);
+}
+
+.earth-border {
+  border: 2px solid var(--secondary-brown);
+}
+
+.sky-border {
+  border: 2px solid var(--accent-blue);
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+  
+  body {
+    background: linear-gradient(135deg, var(--background) 0%, #2a2a2a 100%);
+  }
+  
+  .forest-gradient {
+    background: linear-gradient(135deg, var(--forest-light) 0%, var(--secondary-brown) 100%);
   }
 }
