@@ -16,7 +16,7 @@
 Forest Revival Initiative is a blockchain-powered fundraising platform that combines environmental conservation with interactive gaming. Users can donate STX tokens to fund real tree planting projects while playing an engaging clicker game that visualizes forest restoration progress. Every donation plants actual trees, and donors can track their environmental impact through carbon offset calculations, wildlife recovery indicators, and real-time forest growth visualization.
 
 **Project Name:** Forest Revival Initiative  
-**Live Demo URL:** https://forest-revival.vercel.app  
+**Live Demo URL:** 
 **Repository URL:** https://github.com/itscansu/fundraising-dapp  
 
 ## ✨ Key Features
@@ -270,16 +270,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **Project Maintainer:** [Cansu](mailto:your.email@example.com)
-- **Discord Community:** [Forest Revival Discord](https://discord.gg/forest-revival)
-- **Twitter:** [@ForestRevival](https://twitter.com/forestrevival)
-- **Documentation:** [docs.forestrevival.org](https://docs.forestrevival.org)
+- **Project Maintainer:**
+- **Discord Community:**
+- **Twitter:** 
+- **Documentation:** 
 
 ### Getting Help
 
 - 🐛 **Bug Reports:** [GitHub Issues](https://github.com/itscansu/fundraising-dapp/issues)
 - 💡 **Feature Requests:** [GitHub Discussions](https://github.com/itscansu/fundraising-dapp/discussions)
-- 💬 **Community Support:** [Discord Server](https://discord.gg/forest-revival)
+- 💬 **Community Support:**
 
 ## 🙏 Acknowledgments
 
