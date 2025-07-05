@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/ui/Providers";
 import { Navbar } from "@/components/Navbar";
+import { ColorModeScript } from "@chakra-ui/react";
+import theme from "@/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,8 +66,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorModeScript initialColorMode="light" />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <Providers>
           <>
             <Navbar />
