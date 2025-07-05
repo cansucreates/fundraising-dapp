@@ -183,203 +183,228 @@ export default function ImpactTracker() {
 
   return (
     <Box
-      bg="linear-gradient(135deg, #2D5A27 0%, #8B4513 100%)"
+      position="relative"
       borderRadius="xl"
-      p={6}
+      overflow="hidden"
       color="white"
     >
-      <VStack spacing={6} align="stretch">
-        <Box textAlign="center">
-          <Text fontSize="2xl" fontWeight="bold" mb={2}>
-            📊 Environmental Impact Tracker
-          </Text>
-          <Text fontSize="sm" opacity={0.8}>
-            Real-time tracking of your environmental contributions
-          </Text>
-        </Box>
+      {/* Background Image */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        bgImage="url('/campaign/communitycollab.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        filter="brightness(0.3)"
+      />
+      {/* Overlay */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        bg="linear-gradient(135deg, rgba(45, 90, 39, 0.9) 0%, rgba(139, 69, 19, 0.9) 100%)"
+      />
+      {/* Content */}
+      <Box position="relative" p={6}>
+        <VStack spacing={6} align="stretch">
+          <Box textAlign="center">
+            <Text fontSize="2xl" fontWeight="bold" mb={2}>
+              📊 Environmental Impact Tracker
+            </Text>
+            <Text fontSize="sm" opacity={0.8}>
+              Real-time tracking of your environmental contributions
+            </Text>
+          </Box>
 
-        {/* Impact Metrics Grid */}
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-          {impactMetrics.map((metric) => (
-            <Box
-              key={metric.id}
-              bg="rgba(255, 255, 255, 0.1)"
-              borderRadius="lg"
-              p={4}
-              textAlign="center"
-              _hover={{
-                bg: "rgba(255, 255, 255, 0.15)",
-                transform: "translateY(-2px)",
-              }}
-              transition="all 0.2s"
-              animation={`${countUpAnimation} 0.5s ease-out`}
-            >
-              <VStack spacing={3}>
-                <Text fontSize="3xl">{metric.icon}</Text>
-                <Text fontSize="lg" fontWeight="bold">
-                  {formatValue(metric.value, metric.unit)}
-                </Text>
-                <Text fontSize="sm" fontWeight="bold">
-                  {metric.name}
-                </Text>
-                <Text fontSize="xs" opacity={0.8} textAlign="center">
-                  {metric.description}
-                </Text>
-                {metric.comparison && (
-                  <Badge colorScheme="green" variant="subtle" fontSize="xs">
-                    {metric.comparison}
-                  </Badge>
-                )}
-              </VStack>
-            </Box>
-          ))}
-        </SimpleGrid>
-
-        {/* Progress towards goals */}
-        <Box
-          bg="rgba(255, 255, 255, 0.1)"
-          borderRadius="lg"
-          p={4}
-        >
-          <Text fontWeight="bold" mb={4} textAlign="center">
-            🎯 Progress Towards Environmental Goals
-          </Text>
-          <VStack spacing={3}>
-            <Box w="full">
-              <Flex justify="space-between" mb={1}>
-                <Text fontSize="sm">Carbon Neutrality (1 ton CO₂)</Text>
-                <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 1000 * 100)}%</Text>
-              </Flex>
-              <Progress
-                value={Math.min((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 1000 * 100, 100)}
-                colorScheme="blue"
-                borderRadius="full"
-              />
-            </Box>
-            <Box w="full">
-              <Flex justify="space-between" mb={1}>
-                <Text fontSize="sm">Forest Restoration (10,000 trees)</Text>
-                <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'trees-planted')?.value || 0) / 10000 * 100)}%</Text>
-              </Flex>
-              <Progress
-                value={Math.min((impactMetrics.find(m => m.id === 'trees-planted')?.value || 0) / 10000 * 100, 100)}
-                colorScheme="green"
-                borderRadius="full"
-              />
-            </Box>
-            <Box w="full">
-              <Flex justify="space-between" mb={1}>
-                <Text fontSize="sm">Wildlife Sanctuary (100 species)</Text>
-                <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'wildlife-returned')?.value || 0) / 100 * 100)}%</Text>
-              </Flex>
-              <Progress
-                value={Math.min((impactMetrics.find(m => m.id === 'wildlife-returned')?.value || 0) / 100 * 100, 100)}
-                colorScheme="orange"
-                borderRadius="full"
-              />
-            </Box>
-          </VStack>
-        </Box>
-
-        {/* Educational Content */}
-        <Box>
-          <Text fontWeight="bold" mb={4} textAlign="center">
-            📚 Learn About Environmental Impact
-          </Text>
-          <Accordion allowToggle>
-            {EDUCATIONAL_CONTENT.map((content) => (
-              <AccordionItem key={content.id} border="none" mb={2}>
-                <AccordionButton
-                  bg="rgba(255, 255, 255, 0.1)"
-                  borderRadius="lg"
-                  _hover={{ bg: "rgba(255, 255, 255, 0.15)" }}
-                  _expanded={{ bg: "rgba(255, 255, 255, 0.2)" }}
-                  onClick={() => { setSelectedContent(content); onOpen(); }}
-                >
-                  <HStack spacing={3} flex={1} textAlign="left">
-                    <Text fontSize="xl">{content.icon}</Text>
-                    <Text fontWeight="bold">{content.title}</Text>
-                  </HStack>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel
-                  bg="rgba(255, 255, 255, 0.05)"
-                  borderRadius="lg"
-                  mt={2}
-                >
-                  <Text fontSize="sm" lineHeight="tall">
-                    {content.content}
+          {/* Impact Metrics Grid */}
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+            {impactMetrics.map((metric) => (
+              <Box
+                key={metric.id}
+                bg="rgba(255, 255, 255, 0.1)"
+                borderRadius="lg"
+                p={4}
+                textAlign="center"
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.15)",
+                  transform: "translateY(-2px)",
+                }}
+                transition="all 0.2s"
+                animation={`${countUpAnimation} 0.5s ease-out`}
+              >
+                <VStack spacing={3}>
+                  <Text fontSize="3xl">{metric.icon}</Text>
+                  <Text fontSize="lg" fontWeight="bold">
+                    {formatValue(metric.value, metric.unit)}
                   </Text>
-                </AccordionPanel>
-              </AccordionItem>
+                  <Text fontSize="sm" fontWeight="bold">
+                    {metric.name}
+                  </Text>
+                  <Text fontSize="xs" opacity={0.8} textAlign="center">
+                    {metric.description}
+                  </Text>
+                  {metric.comparison && (
+                    <Badge colorScheme="green" variant="subtle" fontSize="xs">
+                      {metric.comparison}
+                    </Badge>
+                  )}
+                </VStack>
+              </Box>
             ))}
-          </Accordion>
-        </Box>
-
-        {/* Impact Summary */}
-        <Box
-          bg="rgba(255, 255, 255, 0.1)"
-          borderRadius="lg"
-          p={4}
-          textAlign="center"
-        >
-          <Text fontSize="lg" fontWeight="bold" mb={2}>
-            🌟 Your Impact Summary
-          </Text>
-          <Text fontSize="sm" opacity={0.8} mb={3}>
-            Every tree you plant makes a real difference in the fight against climate change and biodiversity loss.
-          </Text>
-          <SimpleGrid columns={2} spacing={4}>
-            <Box>
-              <Text fontSize="xs" opacity={0.8}>Equivalent to</Text>
-              <Text fontSize="lg" fontWeight="bold" color="green.300">
-                {Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 22)} trees
-              </Text>
-            </Box>
-            <Box>
-              <Text fontSize="xs" opacity={0.8}>Carbon footprint offset</Text>
-              <Text fontSize="lg" fontWeight="bold" color="blue.300">
-                {Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 5000 * 100)}%
-              </Text>
-            </Box>
           </SimpleGrid>
-        </Box>
-      </VStack>
 
-      {/* Educational Content Modal */}
-      <Modal isOpen={isOpen} onClose={() => { setSelectedContent(null); onClose(); }} size="lg">
-        <ModalOverlay />
-        <ModalContent bg="gray.800" color="white">
-          <ModalHeader>
-            <HStack spacing={3}>
-              <Text fontSize="2xl">{selectedContent?.icon}</Text>
-              <Text>{selectedContent?.title}</Text>
-            </HStack>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {selectedContent && (
-              <VStack spacing={4} align="stretch">
-                <Text fontSize="lg" lineHeight="tall">
-                  {selectedContent.content}
+          {/* Progress towards goals */}
+          <Box
+            bg="rgba(255, 255, 255, 0.1)"
+            borderRadius="lg"
+            p={4}
+          >
+            <Text fontWeight="bold" mb={4} textAlign="center">
+              🎯 Progress Towards Environmental Goals
+            </Text>
+            <VStack spacing={3}>
+              <Box w="full">
+                <Flex justify="space-between" mb={1}>
+                  <Text fontSize="sm">Carbon Neutrality (1 ton CO₂)</Text>
+                  <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 1000 * 100)}%</Text>
+                </Flex>
+                <Progress
+                  value={Math.min((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 1000 * 100, 100)}
+                  colorScheme="blue"
+                  borderRadius="full"
+                />
+              </Box>
+              <Box w="full">
+                <Flex justify="space-between" mb={1}>
+                  <Text fontSize="sm">Forest Restoration (10,000 trees)</Text>
+                  <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'trees-planted')?.value || 0) / 10000 * 100)}%</Text>
+                </Flex>
+                <Progress
+                  value={Math.min((impactMetrics.find(m => m.id === 'trees-planted')?.value || 0) / 10000 * 100, 100)}
+                  colorScheme="green"
+                  borderRadius="full"
+                />
+              </Box>
+              <Box w="full">
+                <Flex justify="space-between" mb={1}>
+                  <Text fontSize="sm">Wildlife Sanctuary (100 species)</Text>
+                  <Text fontSize="sm">{Math.round((impactMetrics.find(m => m.id === 'wildlife-returned')?.value || 0) / 100 * 100)}%</Text>
+                </Flex>
+                <Progress
+                  value={Math.min((impactMetrics.find(m => m.id === 'wildlife-returned')?.value || 0) / 100 * 100, 100)}
+                  colorScheme="orange"
+                  borderRadius="full"
+                />
+              </Box>
+            </VStack>
+          </Box>
+
+          {/* Educational Content */}
+          <Box>
+            <Text fontWeight="bold" mb={4} textAlign="center">
+              📚 Learn About Environmental Impact
+            </Text>
+            <Accordion allowToggle>
+              {EDUCATIONAL_CONTENT.map((content) => (
+                <AccordionItem key={content.id} border="none" mb={2}>
+                  <AccordionButton
+                    bg="rgba(255, 255, 255, 0.1)"
+                    borderRadius="lg"
+                    _hover={{ bg: "rgba(255, 255, 255, 0.15)" }}
+                    _expanded={{ bg: "rgba(255, 255, 255, 0.2)" }}
+                    onClick={() => { setSelectedContent(content); onOpen(); }}
+                  >
+                    <HStack spacing={3} flex={1} textAlign="left">
+                      <Text fontSize="xl">{content.icon}</Text>
+                      <Text fontWeight="bold">{content.title}</Text>
+                    </HStack>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel
+                    bg="rgba(255, 255, 255, 0.05)"
+                    borderRadius="lg"
+                    mt={2}
+                  >
+                    <Text fontSize="sm" lineHeight="tall">
+                      {content.content}
+                    </Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Box>
+
+          {/* Impact Summary */}
+          <Box
+            bg="rgba(255, 255, 255, 0.1)"
+            borderRadius="lg"
+            p={4}
+            textAlign="center"
+          >
+            <Text fontSize="lg" fontWeight="bold" mb={2}>
+              🌟 Your Impact Summary
+            </Text>
+            <Text fontSize="sm" opacity={0.8} mb={3}>
+              Every tree you plant makes a real difference in the fight against climate change and biodiversity loss.
+            </Text>
+            <SimpleGrid columns={2} spacing={4}>
+              <Box>
+                <Text fontSize="xs" opacity={0.8}>Equivalent to</Text>
+                <Text fontSize="lg" fontWeight="bold" color="green.300">
+                  {Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 22)} trees
                 </Text>
-                <Box
-                  bg="green.600"
-                  p={3}
-                  borderRadius="md"
-                  textAlign="center"
-                  animation={`${pulseAnimation} 2s ease-in-out infinite`}
-                >
-                  <Text fontWeight="bold">💡 Did you know?</Text>
-                  <Text fontSize="sm">
-                    Your tree planting contributions directly support these environmental benefits!
+              </Box>
+              <Box>
+                <Text fontSize="xs" opacity={0.8}>Carbon footprint offset</Text>
+                <Text fontSize="lg" fontWeight="bold" color="blue.300">
+                  {Math.round((impactMetrics.find(m => m.id === 'carbon-offset')?.value || 0) / 5000 * 100)}%
+                </Text>
+              </Box>
+            </SimpleGrid>
+          </Box>
+        </VStack>
+
+        {/* Educational Content Modal */}
+        <Modal isOpen={isOpen} onClose={() => { setSelectedContent(null); onClose(); }} size="lg">
+          <ModalOverlay />
+          <ModalContent bg="gray.800" color="white">
+            <ModalHeader>
+              <HStack spacing={3}>
+                <Text fontSize="2xl">{selectedContent?.icon}</Text>
+                <Text>{selectedContent?.title}</Text>
+              </HStack>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              {selectedContent && (
+                <VStack spacing={4} align="stretch">
+                  <Text fontSize="lg" lineHeight="tall">
+                    {selectedContent.content}
                   </Text>
-                </Box>
-              </VStack>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                  <Box
+                    bg="green.600"
+                    p={3}
+                    borderRadius="md"
+                    textAlign="center"
+                    animation={`${pulseAnimation} 2s ease-in-out infinite`}
+                  >
+                    <Text fontWeight="bold">💡 Did you know?</Text>
+                    <Text fontSize="sm">
+                      Your tree planting contributions directly support these environmental benefits!
+                    </Text>
+                  </Box>
+                </VStack>
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Box>
   );
 } 

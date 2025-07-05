@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("http://localhost:3000"),
   title: "Forest Revival - Tree Planting Initiative",
   description:
     "Help restore deforested areas by funding tree planting initiatives. Each donation plants real trees while you play our interactive tree planting game. Watch forests grow, wildlife return, and carbon offset calculations in real-time.",
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/forest-revival-og.jpg",
+        url: "/campaign/header.jpg",
         width: 1200,
         height: 630,
         alt: "Forest Revival Initiative - Tree Planting Campaign",
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Forest Revival - Tree Planting Initiative",
     description: "Help restore deforested areas by funding tree planting initiatives. Each donation plants real trees while you play our interactive tree planting game.",
-    images: ["/forest-revival-og.jpg"],
+    images: ["/campaign/header.jpg"],
   },
 };
 

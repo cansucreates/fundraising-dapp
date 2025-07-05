@@ -41,6 +41,7 @@ import { getRefundTx } from "@/lib/campaign-utils";
 import { getStacksNetworkString } from "@/lib/stacks-api";
 import useTransactionExecuter from "@/hooks/useTransactionExecuter";
 import CampaignAdminControls from "./CampaignAdminControls";
+import CarbonOffsetIllustration from "./CarbonOffsetIllustration";
 
 export default function CampaignDetails({
   images,
@@ -120,12 +121,60 @@ export default function CampaignDetails({
 
   return (
     <Container maxW="container.xl" py="8">
-      <Flex direction="column" gap="6">
-        <Flex direction="column" gap="1">
-          <Heading>{CAMPAIGN_TITLE}</Heading>
-          <Text>{CAMPAIGN_SUBTITLE}</Text>
-        </Flex>
+      {/* Hero Section with Background Image */}
+      <Box
+        position="relative"
+        borderRadius="xl"
+        overflow="hidden"
+        mb={8}
+        minH="400px"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {/* Background Image */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          bgImage={`url(${images[0]})`}
+          bgSize="cover"
+          bgPosition="center"
+          bgRepeat="no-repeat"
+          filter="brightness(0.7)"
+        />
+        {/* Overlay */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          bg="linear-gradient(135deg, rgba(45, 90, 39, 0.8) 0%, rgba(139, 69, 19, 0.8) 100%)"
+        />
+        {/* Content */}
+        <Box position="relative" textAlign="center" color="white" px={6}>
+          <Heading size="2xl" mb={4} textShadow="2px 2px 4px rgba(0,0,0,0.5)">
+            {CAMPAIGN_TITLE}
+          </Heading>
+          <Text fontSize="xl" mb={6} textShadow="1px 1px 2px rgba(0,0,0,0.5)">
+            {CAMPAIGN_SUBTITLE}
+          </Text>
+          <Button
+            size="lg"
+            colorScheme="green"
+            onClick={() => setIsDonationModalOpen(true)}
+            _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+            transition="all 0.2s"
+          >
+            🌱 Start Planting Trees Now
+          </Button>
+        </Box>
+      </Box>
 
+      <Flex direction="column" gap="6">
         <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8} alignItems="start">
           {/* Left column: Image carousel */}
           <Box position="relative" width="full" overflow="hidden">
@@ -368,6 +417,9 @@ export default function CampaignDetails({
 
         {/* Markdown content */}
         <StyledMarkdown>{markdownContent}</StyledMarkdown>
+
+        {/* Carbon Offset Educational Illustration */}
+        <CarbonOffsetIllustration />
       </Flex>
       <DonationModal
         isOpen={isDonationModalOpen}

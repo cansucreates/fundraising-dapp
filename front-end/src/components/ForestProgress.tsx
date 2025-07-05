@@ -162,233 +162,258 @@ export default function ForestProgress() {
 
   return (
     <Box
-      bg="linear-gradient(135deg, #2D5A27 0%, #8B4513 100%)"
+      position="relative"
       borderRadius="xl"
-      p={6}
+      overflow="hidden"
       color="white"
     >
-      <VStack spacing={6} align="stretch">
-        <Box textAlign="center">
-          <Text fontSize="2xl" fontWeight="bold" mb={2}>
-            🌍 Global Forest Restoration Progress
-          </Text>
-          <Text fontSize="sm" opacity={0.8}>
-            Track the recovery of deforested regions around the world
-          </Text>
-        </Box>
+      {/* Background Image */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        bgImage="url('/campaign/recoveredwildlife.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        filter="brightness(0.3)"
+      />
+      {/* Overlay */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        bg="linear-gradient(135deg, rgba(45, 90, 39, 0.9) 0%, rgba(139, 69, 19, 0.9) 100%)"
+      />
+      {/* Content */}
+      <Box position="relative" p={6}>
+        <VStack spacing={6} align="stretch">
+          <Box textAlign="center">
+            <Text fontSize="2xl" fontWeight="bold" mb={2}>
+              🌍 Global Forest Restoration Progress
+            </Text>
+            <Text fontSize="sm" opacity={0.8}>
+              Track the recovery of deforested regions around the world
+            </Text>
+          </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-          {regions.map((region) => (
-            <Box
-              key={region.id}
-              bg="rgba(255, 255, 255, 0.1)"
-              borderRadius="lg"
-              p={4}
-              cursor="pointer"
-              _hover={{
-                bg: "rgba(255, 255, 255, 0.15)",
-                transform: "translateY(-2px)",
-              }}
-              transition="all 0.2s"
-              onClick={() => handleRegionClick(region)}
-              animation={`${growAnimation} 0.5s ease-out`}
-            >
-              <VStack spacing={3} align="stretch">
-                <Flex justify="space-between" align="center">
-                  <HStack spacing={2}>
-                    <Text fontSize="2xl">{region.icon}</Text>
-                    <VStack align="start" spacing={0}>
-                      <Text fontWeight="bold" fontSize="lg">
-                        {region.name}
-                      </Text>
-                      <Text fontSize="xs" opacity={0.8}>
-                        {region.currentTrees.toLocaleString()} / {region.targetTrees.toLocaleString()} trees
-                      </Text>
-                    </VStack>
-                  </HStack>
-                  <Badge
-                    colorScheme={getStatusColor(region.status)}
-                    variant="solid"
-                    fontSize="sm"
-                  >
-                    <HStack spacing={1}>
-                      <Text>{getStatusIcon(region.status)}</Text>
-                      <Text>{region.status.charAt(0).toUpperCase() + region.status.slice(1)}</Text>
-                    </HStack>
-                  </Badge>
-                </Flex>
-
-                <Box>
-                  <Flex justify="space-between" mb={1}>
-                    <Text fontSize="xs">Restoration Progress</Text>
-                    <Text fontSize="xs">
-                      {Math.round((region.currentTrees / region.targetTrees) * 100)}%
-                    </Text>
-                  </Flex>
-                  <Progress
-                    value={(region.currentTrees / region.targetTrees) * 100}
-                    colorScheme={getStatusColor(region.status)}
-                    borderRadius="full"
-                    size="sm"
-                  />
-                </Box>
-
-                <SimpleGrid columns={2} spacing={2}>
-                  <Box textAlign="center">
-                    <Text fontSize="xs" opacity={0.8}>Carbon Offset</Text>
-                    <Text fontSize="sm" fontWeight="bold" color="blue.300">
-                      {Math.round(region.carbonOffset).toLocaleString()} kg
-                    </Text>
-                  </Box>
-                  <Box textAlign="center">
-                    <Text fontSize="xs" opacity={0.8}>Wildlife</Text>
-                    <Text fontSize="sm" fontWeight="bold" color="orange.300">
-                      {region.wildlife.length} species
-                    </Text>
-                  </Box>
-                </SimpleGrid>
-              </VStack>
-            </Box>
-          ))}
-        </SimpleGrid>
-
-        {/* Global statistics */}
-        <Box
-          bg="rgba(255, 255, 255, 0.1)"
-          borderRadius="lg"
-          p={4}
-        >
-          <Text fontWeight="bold" mb={3} textAlign="center">
-            🌍 Global Impact Summary
-          </Text>
-          <SimpleGrid columns={3} spacing={4}>
-            <Box textAlign="center">
-              <Text fontSize="xs" opacity={0.8}>Total Trees Planted</Text>
-              <Text fontSize="xl" fontWeight="bold" color="green.300">
-                {regions.reduce((sum, r) => sum + r.currentTrees, 0).toLocaleString()}
-              </Text>
-            </Box>
-            <Box textAlign="center">
-              <Text fontSize="xs" opacity={0.8}>Carbon Offset</Text>
-              <Text fontSize="xl" fontWeight="bold" color="blue.300">
-                {Math.round(regions.reduce((sum, r) => sum + r.carbonOffset, 0)).toLocaleString()} kg
-              </Text>
-            </Box>
-            <Box textAlign="center">
-              <Text fontSize="xs" opacity={0.8}>Regions Restored</Text>
-              <Text fontSize="xl" fontWeight="bold" color="green.300">
-                {regions.filter(r => r.status === 'restored' || r.status === 'thriving').length}
-              </Text>
-            </Box>
-          </SimpleGrid>
-        </Box>
-      </VStack>
-
-      {/* Region Detail Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent bg="gray.800" color="white">
-          <ModalHeader>
-            <HStack spacing={3}>
-              <Text fontSize="2xl">{selectedRegion?.icon}</Text>
-              <Text>{selectedRegion?.name}</Text>
-            </HStack>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {selectedRegion && (
-              <VStack spacing={4} align="stretch">
-                <Box>
-                  <Text fontSize="sm" opacity={0.8} mb={2}>
-                    {selectedRegion.description}
-                  </Text>
-                  <Badge
-                    colorScheme={getStatusColor(selectedRegion.status)}
-                    variant="solid"
-                    fontSize="md"
-                  >
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+            {regions.map((region) => (
+              <Box
+                key={region.id}
+                bg="rgba(255, 255, 255, 0.1)"
+                borderRadius="lg"
+                p={4}
+                cursor="pointer"
+                _hover={{
+                  bg: "rgba(255, 255, 255, 0.15)",
+                  transform: "translateY(-2px)",
+                }}
+                transition="all 0.2s"
+                onClick={() => handleRegionClick(region)}
+                animation={`${growAnimation} 0.5s ease-out`}
+              >
+                <VStack spacing={3} align="stretch">
+                  <Flex justify="space-between" align="center">
                     <HStack spacing={2}>
-                      <Text>{getStatusIcon(selectedRegion.status)}</Text>
-                      <Text>{selectedRegion.status.charAt(0).toUpperCase() + selectedRegion.status.slice(1)}</Text>
+                      <Text fontSize="2xl">{region.icon}</Text>
+                      <VStack align="start" spacing={0}>
+                        <Text fontWeight="bold" fontSize="lg">
+                          {region.name}
+                        </Text>
+                        <Text fontSize="xs" opacity={0.8}>
+                          {region.currentTrees.toLocaleString()} / {region.targetTrees.toLocaleString()} trees
+                        </Text>
+                      </VStack>
                     </HStack>
-                  </Badge>
-                </Box>
+                    <Badge
+                      colorScheme={getStatusColor(region.status)}
+                      variant="solid"
+                      fontSize="sm"
+                    >
+                      <HStack spacing={1}>
+                        <Text>{getStatusIcon(region.status)}</Text>
+                        <Text>{region.status.charAt(0).toUpperCase() + region.status.slice(1)}</Text>
+                      </HStack>
+                    </Badge>
+                  </Flex>
 
-                <Box>
-                  <Text fontWeight="bold" mb={2}>Restoration Progress</Text>
-                  <Progress
-                    value={(selectedRegion.currentTrees / selectedRegion.targetTrees) * 100}
-                    colorScheme={getStatusColor(selectedRegion.status)}
-                    borderRadius="full"
-                    size="lg"
-                    mb={2}
-                  />
-                  <Text fontSize="sm">
-                    {selectedRegion.currentTrees.toLocaleString()} of {selectedRegion.targetTrees.toLocaleString()} trees planted
-                  </Text>
-                </Box>
-
-                <SimpleGrid columns={2} spacing={4}>
-                  <Box
-                    bg="rgba(255, 255, 255, 0.1)"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="center"
-                  >
-                    <Text fontSize="sm" opacity={0.8}>Carbon Offset</Text>
-                    <Text fontSize="lg" fontWeight="bold" color="blue.300">
-                      {Math.round(selectedRegion.carbonOffset).toLocaleString()} kg CO₂
-                    </Text>
+                  <Box>
+                    <Flex justify="space-between" mb={1}>
+                      <Text fontSize="xs">Restoration Progress</Text>
+                      <Text fontSize="xs">
+                        {Math.round((region.currentTrees / region.targetTrees) * 100)}%
+                      </Text>
+                    </Flex>
+                    <Progress
+                      value={(region.currentTrees / region.targetTrees) * 100}
+                      colorScheme={getStatusColor(region.status)}
+                      borderRadius="full"
+                      size="sm"
+                    />
                   </Box>
-                  <Box
-                    bg="rgba(255, 255, 255, 0.1)"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="center"
-                  >
-                    <Text fontSize="sm" opacity={0.8}>Forest Area</Text>
-                    <Text fontSize="lg" fontWeight="bold" color="green.300">
-                      {Math.round(selectedRegion.currentTrees * 25).toLocaleString()} m²
-                    </Text>
-                  </Box>
-                </SimpleGrid>
 
-                <Box>
-                  <Text fontWeight="bold" mb={2}>Wildlife Species</Text>
                   <SimpleGrid columns={2} spacing={2}>
-                    {selectedRegion.wildlife.map((animal, index) => (
-                      <Box
-                        key={index}
-                        bg="rgba(255, 255, 255, 0.1)"
-                        p={2}
-                        borderRadius="md"
-                        textAlign="center"
-                        animation={`${pulseAnimation} 2s ease-in-out infinite`}
-                        style={{ animationDelay: `${index * 0.2}s` }}
-                      >
-                        <Text fontSize="sm">{animal}</Text>
-                      </Box>
-                    ))}
+                    <Box textAlign="center">
+                      <Text fontSize="xs" opacity={0.8}>Carbon Offset</Text>
+                      <Text fontSize="sm" fontWeight="bold" color="blue.300">
+                        {Math.round(region.carbonOffset).toLocaleString()} kg
+                      </Text>
+                    </Box>
+                    <Box textAlign="center">
+                      <Text fontSize="xs" opacity={0.8}>Wildlife</Text>
+                      <Text fontSize="sm" fontWeight="bold" color="orange.300">
+                        {region.wildlife.length} species
+                      </Text>
+                    </Box>
                   </SimpleGrid>
-                </Box>
+                </VStack>
+              </Box>
+            ))}
+          </SimpleGrid>
 
-                {selectedRegion.status === 'thriving' && (
-                  <Box
-                    bg="green.600"
-                    p={3}
-                    borderRadius="md"
-                    textAlign="center"
-                    animation={`${floatAnimation} 3s ease-in-out infinite`}
-                  >
-                    <Text fontWeight="bold">🎉 This region has been fully restored!</Text>
-                    <Text fontSize="sm">Wildlife has returned and the ecosystem is thriving.</Text>
+          {/* Global statistics */}
+          <Box
+            bg="rgba(255, 255, 255, 0.1)"
+            borderRadius="lg"
+            p={4}
+          >
+            <Text fontWeight="bold" mb={3} textAlign="center">
+              🌍 Global Impact Summary
+            </Text>
+            <SimpleGrid columns={3} spacing={4}>
+              <Box textAlign="center">
+                <Text fontSize="xs" opacity={0.8}>Total Trees Planted</Text>
+                <Text fontSize="xl" fontWeight="bold" color="green.300">
+                  {regions.reduce((sum, r) => sum + r.currentTrees, 0).toLocaleString()}
+                </Text>
+              </Box>
+              <Box textAlign="center">
+                <Text fontSize="xs" opacity={0.8}>Carbon Offset</Text>
+                <Text fontSize="xl" fontWeight="bold" color="blue.300">
+                  {Math.round(regions.reduce((sum, r) => sum + r.carbonOffset, 0)).toLocaleString()} kg
+                </Text>
+              </Box>
+              <Box textAlign="center">
+                <Text fontSize="xs" opacity={0.8}>Regions Restored</Text>
+                <Text fontSize="xl" fontWeight="bold" color="green.300">
+                  {regions.filter(r => r.status === 'restored' || r.status === 'thriving').length}
+                </Text>
+              </Box>
+            </SimpleGrid>
+          </Box>
+        </VStack>
+
+        {/* Region Detail Modal */}
+        <Modal isOpen={isOpen} onClose={onClose} size="lg">
+          <ModalOverlay />
+          <ModalContent bg="gray.800" color="white">
+            <ModalHeader>
+              <HStack spacing={3}>
+                <Text fontSize="2xl">{selectedRegion?.icon}</Text>
+                <Text>{selectedRegion?.name}</Text>
+              </HStack>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              {selectedRegion && (
+                <VStack spacing={4} align="stretch">
+                  <Box>
+                    <Text fontSize="sm" opacity={0.8} mb={2}>
+                      {selectedRegion.description}
+                    </Text>
+                    <Badge
+                      colorScheme={getStatusColor(selectedRegion.status)}
+                      variant="solid"
+                      fontSize="md"
+                    >
+                      <HStack spacing={2}>
+                        <Text>{getStatusIcon(selectedRegion.status)}</Text>
+                        <Text>{selectedRegion.status.charAt(0).toUpperCase() + selectedRegion.status.slice(1)}</Text>
+                      </HStack>
+                    </Badge>
                   </Box>
-                )}
-              </VStack>
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+
+                  <Box>
+                    <Text fontWeight="bold" mb={2}>Restoration Progress</Text>
+                    <Progress
+                      value={(selectedRegion.currentTrees / selectedRegion.targetTrees) * 100}
+                      colorScheme={getStatusColor(selectedRegion.status)}
+                      borderRadius="full"
+                      size="lg"
+                      mb={2}
+                    />
+                    <Text fontSize="sm">
+                      {selectedRegion.currentTrees.toLocaleString()} of {selectedRegion.targetTrees.toLocaleString()} trees planted
+                    </Text>
+                  </Box>
+
+                  <SimpleGrid columns={2} spacing={4}>
+                    <Box
+                      bg="rgba(255, 255, 255, 0.1)"
+                      p={3}
+                      borderRadius="md"
+                      textAlign="center"
+                    >
+                      <Text fontSize="sm" opacity={0.8}>Carbon Offset</Text>
+                      <Text fontSize="lg" fontWeight="bold" color="blue.300">
+                        {Math.round(selectedRegion.carbonOffset).toLocaleString()} kg CO₂
+                      </Text>
+                    </Box>
+                    <Box
+                      bg="rgba(255, 255, 255, 0.1)"
+                      p={3}
+                      borderRadius="md"
+                      textAlign="center"
+                    >
+                      <Text fontSize="sm" opacity={0.8}>Forest Area</Text>
+                      <Text fontSize="lg" fontWeight="bold" color="green.300">
+                        {Math.round(selectedRegion.currentTrees * 25).toLocaleString()} m²
+                      </Text>
+                    </Box>
+                  </SimpleGrid>
+
+                  <Box>
+                    <Text fontWeight="bold" mb={2}>Wildlife Species</Text>
+                    <SimpleGrid columns={2} spacing={2}>
+                      {selectedRegion.wildlife.map((animal, index) => (
+                        <Box
+                          key={index}
+                          bg="rgba(255, 255, 255, 0.1)"
+                          p={2}
+                          borderRadius="md"
+                          textAlign="center"
+                          animation={`${pulseAnimation} 2s ease-in-out infinite`}
+                          style={{ animationDelay: `${index * 0.2}s` }}
+                        >
+                          <Text fontSize="sm">{animal}</Text>
+                        </Box>
+                      ))}
+                    </SimpleGrid>
+                  </Box>
+
+                  {selectedRegion.status === 'thriving' && (
+                    <Box
+                      bg="green.600"
+                      p={3}
+                      borderRadius="md"
+                      textAlign="center"
+                      animation={`${floatAnimation} 3s ease-in-out infinite`}
+                    >
+                      <Text fontWeight="bold">🎉 This region has been fully restored!</Text>
+                      <Text fontSize="sm">Wildlife has returned and the ecosystem is thriving.</Text>
+                    </Box>
+                  )}
+                </VStack>
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Box>
   );
 } 
